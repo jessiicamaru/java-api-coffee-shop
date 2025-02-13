@@ -14,5 +14,6 @@ public class CoffeeDto {
     private Double coffeeCost;
     private String coffeeDescription;
     private String categoryTitle;
+    private String categoryId;
 }
 

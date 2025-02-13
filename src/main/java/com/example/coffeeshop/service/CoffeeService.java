@@ -10,4 +10,5 @@ public interface CoffeeService {
     List<CoffeeDto> getAllCoffees();
     Coffee insertCoffee(Coffee coffee);
     List<CoffeeDto> getAllCoffeesByCategory(String categoryId);
+    void addLikeCoffee(String id);
 }

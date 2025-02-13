@@ -48,6 +48,11 @@ public class CoffeeServiceImpl implements CoffeeService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void addLikeCoffee(String id) {
+
+    }
+
     private CoffeeDto mapToCoffeeDto(Coffee coffee) {
         return CoffeeDto.builder()
                 .coffeeId(coffee.getCoffeeId())
@@ -56,6 +61,7 @@ public class CoffeeServiceImpl implements CoffeeService {
                 .coffeeCost(coffee.getCoffeeCost())
                 .coffeeDescription(coffee.getCoffeeDescription())
                 .categoryTitle(coffee.getCategory().getCategoryTitle())
+                .categoryId(coffee.getCategory().getCategoryId())
                 .build();
     }
 }

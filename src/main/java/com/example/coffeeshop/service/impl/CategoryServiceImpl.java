@@ -5,6 +5,7 @@ import com.example.coffeeshop.model.Category;
 import com.example.coffeeshop.repository.CategoryRepository;
 import com.example.coffeeshop.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> getAllCategories() {
-        List<Category> categories = categoryRepository.findAll();
+        List<Category> categories = categoryRepository.findAll(Sort.by(Sort.Direction.DESC, "categoryId"));
         return categories.stream().map(this::mapToCategoryDto).collect(Collectors.toList());
     }
 
