@@ -33,10 +33,4 @@ public class CoffeeController {
         //http://localhost:5000/all-coffee?id=0d6d2f67-d26b-11
         return coffeeService.getAllCoffeesByCategory(categoryId);
     }
-
-    @PostMapping("/add-like-coffee")
-    @ResponseBody
-    public void addLikeCoffee(@RequestBody String coffeeId) {
-
-    }
 }
