@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+
 public interface LikesRepository extends JpaRepository<Likes, String> {
     @Modifying
     @Transactional
@@ -13,6 +15,5 @@ public interface LikesRepository extends JpaRepository<Likes, String> {
             "VALUES (UUID(), :#{#likes.uid}, :#{#likes.coffeeId})",
             nativeQuery = true)
     int addLikeCoffee(Likes likes);
-
-//    ArrayList<Likes> findAllByUid(String uid);
+    ArrayList<Likes> findAllByUserUid(String uid);
 }

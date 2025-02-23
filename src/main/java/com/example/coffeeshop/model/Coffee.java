@@ -13,6 +13,7 @@ import java.util.UUID;
 @Data
 public class Coffee {
     @Id
+    @Column(name = "coffee_id")
     private String coffeeId;
 
     private String coffeeTitle;

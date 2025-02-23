@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Data
 public class User {
     @Id
+    @Column(name = "uid")
     private String uid;
     private String email;
 

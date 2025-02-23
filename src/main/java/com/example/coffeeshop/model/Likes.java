@@ -1,11 +1,7 @@
 package com.example.coffeeshop.model;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,11 +17,13 @@ public class Likes {
     @Id
     private String id;
 
-    @Column(name = "uid")
-    @JsonProperty("uid")
-    private String uid;
-
-    @Column(name = "coffee_id")
+    @ManyToOne
+    @JoinColumn(name = "coffee_id", referencedColumnName = "coffee_id")
     @JsonProperty("coffee_id")
-    private String coffeeId;
+    private Coffee coffee;
+
+    @ManyToOne
+    @JoinColumn(name = "uid", referencedColumnName = "uid")
+    @JsonProperty("uid")
+    private User user;
 }
