@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface CoffeeRepository extends JpaRepository<Coffee, String> {
     List<Coffee> findByCategory(Category category);
+    Coffee findByCoffeeId(String coffeeId);
 }

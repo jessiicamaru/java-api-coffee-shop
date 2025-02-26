@@ -15,5 +15,5 @@ public interface LikesRepository extends JpaRepository<Likes, String> {
             "VALUES (UUID(), :#{#likes.uid}, :#{#likes.coffeeId})",
             nativeQuery = true)
     int addLikeCoffee(Likes likes);
-    ArrayList<Likes> findAllByUserUid(String uid);
+    ArrayList<Likes> findAllByUid(String uid);
 }

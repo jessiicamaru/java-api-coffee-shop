@@ -4,6 +4,7 @@ import com.example.coffeeshop.dto.CoffeeDto;
 import com.example.coffeeshop.dto.LikesDto;
 import com.example.coffeeshop.model.Coffee;
 import com.example.coffeeshop.model.Likes;
+import com.example.coffeeshop.repository.CoffeeRepository;
 import com.example.coffeeshop.repository.LikesRepository;
 import com.example.coffeeshop.service.LikesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,12 @@ public class LikesServiceImpl implements LikesService {
     @Autowired
     private LikesRepository likesRepository;
 
+    @Autowired
+    private CoffeeRepository coffeeRepository;
+
     @Override
     public List<LikesDto> findAllByUid(String uid) {
-        List<Likes> likes = likesRepository.findAllByUserUid(uid);
+        List<Likes> likes = likesRepository.findAllByUid(uid);
         return likes.stream().map(like -> mapToLikesDto(like)).collect(Collectors.toList());
 
     }
@@ -32,20 +36,11 @@ public class LikesServiceImpl implements LikesService {
         return likesRepository.addLikeCoffee(likes);
     }
 
-    private LikesDto mapToLikesDto(Likes likes) {
-        return LikesDto.builder()
-                .coffees(
-                        Collections.singletonList(likes.getCoffee())
-                                .stream()
-                                .map(coffee -> mapToCoffeeDto(coffee))
-                                .collect(Collectors.toList())
-                )
-                .build();
-    }
+    private LikesDto mapToLikesDto(Likes like) {
+        Coffee coffee = coffeeRepository.findByCoffeeId(like.getCoffeeId());
 
-    private CoffeeDto mapToCoffeeDto(Coffee coffee) {
-        return CoffeeDto.builder()
-                .coffeeId(coffee.getCoffeeId())
+        return LikesDto.builder()
+                .coffeeId(like.getCoffeeId())
                 .coffeeTitle(coffee.getCoffeeTitle())
                 .coffeePhotoUrl(coffee.getCoffeePhotoUrl())
                 .coffeeCost(coffee.getCoffeeCost())

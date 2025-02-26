@@ -10,6 +10,11 @@ import java.util.List;
 @Data
 @Builder
 public class LikesDto {
-    @JsonProperty("coffees")
-    private List<CoffeeDto> coffees;
+    private String coffeeId;
+    private String coffeeTitle;
+    private String coffeePhotoUrl;
+    private Double coffeeCost;
+    private String coffeeDescription;
+    private String categoryTitle;
+    private String categoryId;
 }
