@@ -2,7 +2,9 @@ package com.example.coffeeshop.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -18,6 +20,16 @@ public class UserOrder {
     private String orderId = UUID.randomUUID().toString();
 
     @ManyToOne
-    @JoinColumn(name = "uid", referencedColumnName = "uid")
+    @JoinColumn(name = "uid", referencedColumnName = "uid", nullable = false)
     private User user;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    public UserOrder(String orderId, User user) {
+        this.orderId = orderId;
+        this.user = user;
+    }
 }
