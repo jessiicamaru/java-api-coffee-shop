@@ -32,7 +32,13 @@ public class LikesController {
 
     @GetMapping("/like-by-uid")
     @ResponseBody
-    public List<LikesDto> getAllLikeByUid(@RequestParam("uid") String uid) {
+    public List<String> getAllLikeByUid(@RequestParam("uid") String uid) {
         return likesService.findAllByUid(uid);
+    }
+
+    @DeleteMapping("/delete-by-coffee-id/{id}/{uid}")
+    @ResponseBody
+    public int deleteLikeCoffee(@PathVariable String id, @PathVariable String uid) {
+        return likesService.deleteLikeCoffee(id, uid);
     }
 }

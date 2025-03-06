@@ -25,9 +25,9 @@ public class LikesServiceImpl implements LikesService {
     private CoffeeRepository coffeeRepository;
 
     @Override
-    public List<LikesDto> findAllByUid(String uid) {
+    public List<String> findAllByUid(String uid) {
         List<Likes> likes = likesRepository.findAllByUid(uid);
-        return likes.stream().map(like -> mapToLikesDto(like)).collect(Collectors.toList());
+        return likes.stream().map(Likes::getCoffeeId).collect(Collectors.toList());
 
     }
 
@@ -36,18 +36,9 @@ public class LikesServiceImpl implements LikesService {
         return likesRepository.addLikeCoffee(likes);
     }
 
-    private LikesDto mapToLikesDto(Likes like) {
-        Coffee coffee = coffeeRepository.findByCoffeeId(like.getCoffeeId());
-
-        return LikesDto.builder()
-                .coffeeId(like.getCoffeeId())
-                .coffeeTitle(coffee.getCoffeeTitle())
-                .coffeePhotoUrl(coffee.getCoffeePhotoUrl())
-                .coffeeCost(coffee.getCoffeeCost())
-                .coffeeDescription(coffee.getCoffeeDescription())
-                .categoryTitle(coffee.getCategory().getCategoryTitle())
-                .categoryId(coffee.getCategory().getCategoryId())
-                .build();
+    @Override
+    public int deleteLikeCoffee(String coffeeId, String uid) {
+        return likesRepository.deleteLikeCoffeeByCoffeeId(coffeeId, uid);
     }
 
 }

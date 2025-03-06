@@ -16,4 +16,9 @@ public interface LikesRepository extends JpaRepository<Likes, String> {
             nativeQuery = true)
     int addLikeCoffee(Likes likes);
     ArrayList<Likes> findAllByUid(String uid);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM Likes WHERE coffee_id = :coffeeId AND uid = :uid", nativeQuery = true)
+    int deleteLikeCoffeeByCoffeeId(String coffeeId, String uid);
 }

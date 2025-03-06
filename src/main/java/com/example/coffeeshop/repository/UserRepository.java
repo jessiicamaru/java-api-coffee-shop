@@ -14,4 +14,5 @@ public interface UserRepository extends JpaRepository<User, String> {
             "VALUES (:#{#user.uid}, :#{#user.displayName}, :#{#user.email}, :#{#user.phoneNumber}, :#{#user.photoUrl})",
             nativeQuery = true)
     int insertIgnore(User user);
+    User findByUid(String uid);
 }
