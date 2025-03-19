@@ -1,10 +1,58 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Order Page</title>
-</head>
-<body>
-<h1>Hello, this is the order page!</h1>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Order Page</title>
+        <link th:href="@{/css/style.css}" rel="stylesheet" />
+    </head>
+    <body>
+        <h1 class="title">Order List</h1>
+        <ul class="container">
+            <li class="row" th:each="item : ${orders}">
+                <div class="row">
+                    <div class="order-container" style="font-size: 16px">
+                        <div class="row">
+                            Order ID:
+                            <span style="font-weight: 600" th:text="${item.orderId}"></span>
+                        </div>
+                        <div class="row">
+                            Customer:
+                            <span style="font-weight: 600" th:text="${item.user.name}"></span> - <span style="font-weight: 600" th:text="${item.user.email}"></span>
+                        </div>
+
+                        <div class="row" style="margin: 16px 0; font-weight: bold">Coffees:</div>
+                        <ul class="row">
+                            <li th:each="coffee : ${item.coffees}" class="row flex p-2 coffee-item" style="align-items: center; justify-content: center">
+                                <div class="w-70">
+                                    <div th:text="${coffee.coffeeTitle}" class="coffee-name"></div>
+                                    <div th:text="${coffee.categoryTitle}" class="coffee-category">Americano</div>
+                                    <div th:text="'Size: ' + ${coffee.size}" class="size">Size: M</div>
+                                    <div th:text="'Quantity: ' + ${coffee.quantity}" class="quantity">Quantity: 2</div>
+                                    <div th:text="'Cost: ' + ${coffee.coffeeCost} + ' USD' " class="price">Price: 3.0 USD</div>
+                                    <div style="margin-top: 8px">
+                                        <button id="accept">Accept Order</button>
+                                        <button id="decline">Decline Order</button>
+                                        <button id="finish">Order Finish</button>
+                                    </div>
+                                </div>
+
+                                <div class="w-30">
+                                    <img
+                                            th:src="${coffee.coffeePhotoUrl}"
+                                            class="row"
+                                            style="border-radius: 16px"
+                                            alt="Coffee Image"
+                                            width="100"
+                                    />
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </body>
+
+    <script th:src="@{/js/index.js}"></script>
 </html>
+

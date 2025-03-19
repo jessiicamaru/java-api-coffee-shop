@@ -9,6 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderRequest {
     private String uid;
+    private String orderId;
     private List<CoffeeOrder> coffees;
 
     @Getter

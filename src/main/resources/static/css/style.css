@@ -1,0 +1,96 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    padding: 32px;
+    font-size: 62.5%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.row {
+    width: 100%;
+}
+
+.flex {
+    display: flex;
+}
+
+.w-70 {
+    width: 70%;
+}
+
+.w-30 {
+    width: 30%;
+}
+
+.p-2 {
+    padding: 8px;
+}
+
+.title {
+    font-size: 2.4em;
+    font-weight: bold;
+    margin-bottom: 16px;
+    text-align: center;
+    width: 100%;
+}
+
+.container {
+    max-width: 800px;
+}
+
+.order-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    border-radius: 36px;
+    padding: 16px;
+    border: 1px solid #ccc;
+}
+
+.coffee-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+.coffee-category {
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+.size {
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+.quantity {
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+.price {
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.coffee-item {
+    border: 1px solid #ccc;
+    border-radius: 16px;
+}
+
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #e1e1e1;
+}

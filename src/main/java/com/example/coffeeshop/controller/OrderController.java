@@ -20,15 +20,17 @@ public class OrderController {
     }
 
     @PostMapping("/create-order")
-    public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<Integer> createOrder(@RequestBody OrderRequest orderRequest) {
         orderService.createOrder(orderRequest);
-        return ResponseEntity.ok("Order created successfully!");
+        return ResponseEntity.ok(1);
     }
 
     @GetMapping("/web/orders")
-    public ResponseEntity<List<OrderResponse>> getOrder() {
+    public String getOrder(Model model) {
 //        model.addAttribute("orders", orderService.getAllOrders());
         List<OrderResponse> responseEntity = orderService.getAllOrders();
-        return ResponseEntity.ok(responseEntity);
+
+        model.addAttribute("orders", responseEntity);
+        return "order";
     }
 }

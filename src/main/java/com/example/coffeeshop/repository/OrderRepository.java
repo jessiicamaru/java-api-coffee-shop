@@ -18,6 +18,7 @@ public interface OrderRepository extends JpaRepository<UserOrder, String> {
     JOIN OrderCoffee oc ON o.orderId = oc.userOrder.orderId
     JOIN oc.coffee c
     JOIN c.category cat
+    ORDER BY o.createdAt ASC
 """)
     List<Object[]> findAllOrders();
 }

@@ -8,9 +8,11 @@ import com.example.coffeeshop.model.User;
 import com.example.coffeeshop.model.UserOrder;
 import com.example.coffeeshop.repository.*;
 import com.example.coffeeshop.service.OrderService;
+import com.example.coffeeshop.socket.CoffeeWebSocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -30,10 +32,12 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public void createOrder(OrderRequest orderRequest) {
-        String orderId = UUID.randomUUID().toString();
 
-        User user = userRepository.findByUid(orderRequest.getUid());
+    public void createOrder(OrderRequest orderRequest) {
+        String orderId = orderRequest.getOrderId(); // Đã có orderId từ client
+        String uid = orderRequest.getUid(); // Lấy UID từ request
+
+        User user = userRepository.findByUid(uid);
 
         UserOrder userOrder = new UserOrder(orderId, user);
         userOrderRepository.save(userOrder);
@@ -50,6 +54,12 @@ public class OrderServiceImpl implements OrderService {
         }).toList();
 
         orderCoffeeRepository.saveAll(coffeeOrders);
+
+        try {
+            CoffeeWebSocketHandler.sendOrderStatus(uid, orderId, 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -90,6 +100,4 @@ public class OrderServiceImpl implements OrderService {
         return new ArrayList<>(orderMap.values());
 
     }
-
-
 }
