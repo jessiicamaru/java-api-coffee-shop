@@ -2,6 +2,7 @@ package com.example.coffeeshop.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -11,6 +12,14 @@ import java.util.List;
 public class OrderResponse {
     private String orderId;
     private UserInfo user;
+    private String createdAt;
+    private String address;
+    private int stat;
+    private Double total;
+    private Double fee;
+    private Double longitude;
+    private Double latitude;
+    private String note;
     private List<CoffeeOrderInfo> coffees;
 
 

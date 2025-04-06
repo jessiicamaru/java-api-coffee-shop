@@ -19,7 +19,14 @@
                             Customer:
                             <span style="font-weight: 600" th:text="${item.user.name}"></span> - <span style="font-weight: 600" th:text="${item.user.email}"></span>
                         </div>
-
+                        <div class="row">
+                            Date:
+                            <span style="font-weight: 600" th:text="${item.createdAt}"></span>
+                        </div>
+                        <div class="row">
+                            Address:
+                            <span style="font-weight: 600" th:text="${item.address}"></span>
+                        </div>
                         <div class="row" style="margin: 16px 0; font-weight: bold">Coffees:</div>
                         <ul class="row">
                             <li th:each="coffee : ${item.coffees}" class="row flex p-2 coffee-item" style="align-items: center; justify-content: center">

@@ -28,8 +28,23 @@ public class UserOrder {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public UserOrder(String orderId, User user) {
+    private String address;
+    private int stat;
+    private Double total;
+    private Double fee;
+    private Double longitude;
+    private Double latitude;
+    private String note;
+
+    public UserOrder(String orderId, User user, String address, int stat, Double total, Double fee, Double longitude, Double latitude, String note) {
         this.orderId = orderId;
         this.user = user;
+        this.address = address;
+        this.stat = stat;
+        this.total = total;
+        this.fee = fee;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.note = note;
     }
 }

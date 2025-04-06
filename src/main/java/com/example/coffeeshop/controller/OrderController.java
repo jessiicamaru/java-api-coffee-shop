@@ -19,10 +19,16 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+
     @PostMapping("/create-order")
     public ResponseEntity<Integer> createOrder(@RequestBody OrderRequest orderRequest) {
         orderService.createOrder(orderRequest);
         return ResponseEntity.ok(1);
+    }
+
+    @GetMapping("/get-pending-orders")
+    public ResponseEntity<List<OrderResponse>> getPendingOrder(@RequestParam("uid") String uid) {
+        return ResponseEntity.ok(orderService.getAllOrdersByUid(uid));
     }
 
     @GetMapping("/web/orders")
