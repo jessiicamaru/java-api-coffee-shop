@@ -1,65 +1,382 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Order Page</title>
-        <link th:href="@{/css/style.css}" rel="stylesheet" />
-    </head>
-    <body>
-        <h1 class="title">Order List</h1>
-        <ul class="container">
-            <li class="row" th:each="item : ${orders}">
-                <div class="row">
-                    <div class="order-container" style="font-size: 16px">
-                        <div class="row">
-                            Order ID:
-                            <span style="font-weight: 600" th:text="${item.orderId}"></span>
-                        </div>
-                        <div class="row">
-                            Customer:
-                            <span style="font-weight: 600" th:text="${item.user.name}"></span> - <span style="font-weight: 600" th:text="${item.user.email}"></span>
-                        </div>
-                        <div class="row">
-                            Date:
-                            <span style="font-weight: 600" th:text="${item.createdAt}"></span>
-                        </div>
-                        <div class="row">
-                            Address:
-                            <span style="font-weight: 600" th:text="${item.address}"></span>
-                        </div>
-                        <div class="row" style="margin: 16px 0; font-weight: bold">Coffees:</div>
-                        <ul class="row">
-                            <li th:each="coffee : ${item.coffees}" class="row flex p-2 coffee-item" style="align-items: center; justify-content: center">
-                                <div class="w-70">
-                                    <div th:text="${coffee.coffeeTitle}" class="coffee-name"></div>
-                                    <div th:text="${coffee.categoryTitle}" class="coffee-category">Americano</div>
-                                    <div th:text="'Size: ' + ${coffee.size}" class="size">Size: M</div>
-                                    <div th:text="'Quantity: ' + ${coffee.quantity}" class="quantity">Quantity: 2</div>
-                                    <div th:text="'Cost: ' + ${coffee.coffeeCost} + ' USD' " class="price">Price: 3.0 USD</div>
-                                    <div style="margin-top: 8px">
-                                        <button id="accept">Accept Order</button>
-                                        <button id="decline">Decline Order</button>
-                                        <button id="finish">Order Finish</button>
-                                    </div>
-                                </div>
-
-                                <div class="w-30">
-                                    <img
-                                            th:src="${coffee.coffeePhotoUrl}"
-                                            class="row"
-                                            style="border-radius: 16px"
-                                            alt="Coffee Image"
-                                            width="100"
-                                    />
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+<head>
+    <meta charset="UTF-8" />
+    <title>Order Page</title>
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+</head>
+<body>
+<div class="layout-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="sidebar-title">Order management</h2>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="#pending" class="sidebar-link active">Pending<span class="badge" id="pending-count">0</span></a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#preparing" class="sidebar-link">Preparing <span class="badge" id="preparing-count">0</span></a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#delivering" class="sidebar-link">Delivering <span class="badge" id="delivering-count">0</span></a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#completed" class="sidebar-link">Completed <span class="badge" id="completed-count">0</span></a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#canceled" class="sidebar-link">Cancelled <span class="badge" id="canceled-count">0</span></a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#add-coffee" class="sidebar-link">Add Coffee & Category</a>
             </li>
         </ul>
-    </body>
+    </aside>
 
-    <script th:src="@{/js/index.js}"></script>
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="title">Order List</h1>
+
+        <!-- Chưa chấp nhận (stat=0) -->
+        <section class="order-section" id="pending">
+            <h2 class="section-title">Pending</h2>
+            <ul class="container">
+                <li class="order-row" th:each="item : ${pendingOrders}"
+                    th:attr="data-user-id=${item.user != null and item.user.uid != null} ? ${item.user.uid} : '',data-order-id=${item.orderId != null} ? ${item.orderId} : ''">
+                    <div class="order-content">
+                        <div class="order-details">
+                            <div class="detail-row">
+                                <span class="label">Order ID:</span>
+                                <span class="value" th:text="${item.orderId}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Customer:</span>
+                                <span class="value" th:text="${item.user.name} + ' - ' + ${item.user.email}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Date:</span>
+                                <span class="value" th:text="${item.createdAt}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Address:</span>
+                                <span class="value" th:text="${item.address}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Total:</span>
+                                <span class="value" th:text="${item.total} + ' USD'"></span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="label">Status:</span>
+                                <span class="value status pending" th:text="${item.stat}"></span>
+                            </div>
+                            <div class="coffee-header">Coffees:</div>
+                            <ul class="coffee-list">
+                                <li th:each="coffee : ${item.coffees}" class="coffee-item">
+                                    <div class="coffee-details">
+                                        <div class="coffee-info">
+                                            <div class="coffee-title" th:text="${coffee.coffeeTitle}"></div>
+                                            <div class="coffee-category" th:text="${coffee.categoryTitle}"></div>
+                                            <div class="coffee-size" th:text="'Size: ' + ${coffee.size}"></div>
+                                            <div class="coffee-quantity" th:text="'Quantity: ' + ${coffee.quantity}"></div>
+                                            <div class="coffee-cost" th:text="'Cost: ' + ${coffee.coffeeCost} + ' USD'"></div>
+                                        </div>
+                                        <div class="coffee-image-container">
+                                            <img th:src="${coffee.coffeePhotoUrl}" class="coffee-image" alt="Coffee Image" />
+                                        </div>
+                                    </div>
+                                    <div class="button-group">
+                                        <button class="accept-order">Accept Order</button>
+                                        <button class="decline-order">Decline Order</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Đang chuẩn bị (stat=1) -->
+        <section class="order-section" id="preparing">
+            <h2 class="section-title">Preparing</h2>
+            <ul class="container">
+                <li class="order-row" th:each="item : ${preparingOrders}"
+                    th:attr="data-user-id=${item.user != null and item.user.uid != null} ? ${item.user.uid} : '',data-order-id=${item.orderId != null} ? ${item.orderId} : ''">
+                    <div class="order-content">
+                        <div class="order-details">
+                            <div class="detail-row">
+                                <span class="label">Order ID:</span>
+                                <span class="value" th:text="${item.orderId}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Customer:</span>
+                                <span class="value" th:text="${item.user.name} + ' - ' + ${item.user.email}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Date:</span>
+                                <span class="value" th:text="${item.createdAt}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Address:</span>
+                                <span class="value" th:text="${item.address}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Total:</span>
+                                <span class="value" th:text="${item.total} + ' USD'"></span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="label">Status:</span>
+                                <span class="value status preparing" th:text="${item.stat}"></span>
+                            </div>
+                            <div class="coffee-header">Coffees:</div>
+                            <ul class="coffee-list">
+                                <li th:each="coffee : ${item.coffees}" class="coffee-item">
+                                    <div class="coffee-details">
+                                        <div class="coffee-info">
+                                            <div class="coffee-title" th:text="${coffee.coffeeTitle}"></div>
+                                            <div class="coffee-category" th:text="${coffee.categoryTitle}"></div>
+                                            <div class="coffee-size" th:text="'Size: ' + ${coffee.size}"></div>
+                                            <div class="coffee-quantity" th:text="'Quantity: ' + ${coffee.quantity}"></div>
+                                            <div class="coffee-cost" th:text="'Cost: ' + ${coffee.coffeeCost} + ' USD'"></div>
+                                        </div>
+                                        <div class="coffee-image-container">
+                                            <img th:src="${coffee.coffeePhotoUrl}" class="coffee-image" alt="Coffee Image" />
+                                        </div>
+                                    </div>
+                                    <div class="button-group">
+                                        <button class="decline-order">Decline Order</button>
+                                        <button class="finish-order">Order Finish</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Đang giao (stat=2) -->
+        <section class="order-section" id="delivering">
+            <h2 class="section-title">Delivering</h2>
+            <ul class="container">
+                <li class="order-row" th:each="item : ${deliveringOrders}"
+                    th:attr="data-user-id=${item.user != null and item.user.uid != null} ? ${item.user.uid} : '',data-order-id=${item.orderId != null} ? ${item.orderId} : ''">
+                    <div class="order-content">
+                        <div class="order-details">
+                            <div class="detail-row">
+                                <span class="label">Order ID:</span>
+                                <span class="value" th:text="${item.orderId}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Customer:</span>
+                                <span class="value" th:text="${item.user.name} + ' - ' + ${item.user.email}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Date:</span>
+                                <span class="value" th:text="${item.createdAt}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Address:</span>
+                                <span class="value" th:text="${item.address}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Total:</span>
+                                <span class="value" th:text="${item.total} + ' USD'"></span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="label">Status:</span>
+                                <span class="value status delivering" th:text="${item.stat}"></span>
+                            </div>
+                            <div class="coffee-header">Coffees:</div>
+                            <ul class="coffee-list">
+                                <li th:each="coffee : ${item.coffees}" class="coffee-item">
+                                    <div class="coffee-details">
+                                        <div class="coffee-info">
+                                            <div class="coffee-title" th:text="${coffee.coffeeTitle}"></div>
+                                            <div class="coffee-category" th:text="${coffee.categoryTitle}"></div>
+                                            <div class="coffee-size" th:text="'Size: ' + ${coffee.size}"></div>
+                                            <div class="coffee-quantity" th:text="'Quantity: ' + ${coffee.quantity}"></div>
+                                            <div class="coffee-cost" th:text="'Cost: ' + ${coffee.coffeeCost} + ' USD'"></div>
+                                        </div>
+                                        <div class="coffee-image-container">
+                                            <img th:src="${coffee.coffeePhotoUrl}" class="coffee-image" alt="Coffee Image" />
+                                        </div>
+                                    </div>
+                                    <div class="button-group">
+                                        <button class="decline-order">Decline Order</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Đã xong (stat=3) -->
+        <section class="order-section" id="completed">
+            <h2 class="section-title">Completed</h2>
+            <ul class="container">
+                <li class="order-row" th:each="item : ${completedOrders}"
+                    th:attr="data-user-id=${item.user != null and item.user.uid != null} ? ${item.user.uid} : '',data-order-id=${item.orderId != null} ? ${item.orderId} : ''">
+                    <div class="order-content">
+                        <div class="order-details">
+                            <div class="detail-row">
+                                <span class="label">Order ID:</span>
+                                <span class="value" th:text="${item.orderId}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Customer:</span>
+                                <span class="value" th:text="${item.user.name} + ' - ' + ${item.user.email}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Date:</span>
+                                <span class="value" th:text="${item.createdAt}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Address:</span>
+                                <span class="value" th:text="${item.address}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Total:</span>
+                                <span class="value" th:text="${item.total} + ' USD'"></span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="label">Status:</span>
+                                <span class="value status completed" th:text="${item.stat}"></span>
+                            </div>
+                            <div class="coffee-header">Coffees:</div>
+                            <ul class="coffee-list">
+                                <li th:each="coffee : ${item.coffees}" class="coffee-item">
+                                    <div class="coffee-details">
+                                        <div class="coffee-info">
+                                            <div class="coffee-title" th:text="${coffee.coffeeTitle}"></div>
+                                            <div class="coffee-category" th:text="${coffee.categoryTitle}"></div>
+                                            <div class="coffee-size" th:text="'Size: ' + ${coffee.size}"></div>
+                                            <div class="coffee-quantity" th:text="'Quantity: ' + ${coffee.quantity}"></div>
+                                            <div class="coffee-cost" th:text="'Cost: ' + ${coffee.coffeeCost} + ' USD'"></div>
+                                        </div>
+                                        <div class="coffee-image-container">
+                                            <img th:src="${coffee.coffeePhotoUrl}" class="coffee-image" alt="Coffee Image" />
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Đã hủy (stat=4) -->
+        <section class="order-section" id="canceled">
+            <h2 class="section-title">Cancelled</h2>
+            <ul class="container">
+                <li class="order-row" th:each="item : ${canceledOrders}"
+                    th:attr="data-user-id=${item.user != null and item.user.uid != null} ? ${item.user.uid} : '',data-order-id=${item.orderId != null} ? ${item.orderId} : ''">
+                    <div class="order-content">
+                        <div class="order-details">
+                            <div class="detail-row">
+                                <span class="label">Order ID:</span>
+                                <span class="value" th:text="${item.orderId}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Customer:</span>
+                                <span class="value" th:text="${item.user.name} + ' - ' + ${item.user.email}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Date:</span>
+                                <span class="value" th:text="${item.createdAt}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Address:</span>
+                                <span class="value" th:text="${item.address}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Total:</span>
+                                <span class="value" th:text="${item.total} + ' USD'"></span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="label">Status:</span>
+                                <span class="value status canceled" th:text="${item.stat}"></span>
+                            </div>
+                            <div class="coffee-header">Coffees:</div>
+                            <ul class="coffee-list">
+                                <li th:each="coffee : ${item.coffees}" class="coffee-item">
+                                    <div class="coffee-details">
+                                        <div class="coffee-info">
+                                            <div class="coffee-title" th:text="${coffee.coffeeTitle}"></div>
+                                            <div class="coffee-category" th:text="${coffee.categoryTitle}"></div>
+                                            <div class="coffee-size" th:text="'Size: ' + ${coffee.size}"></div>
+                                            <div class="coffee-quantity" th:text="'Quantity: ' + ${coffee.quantity}"></div>
+                                            <div class="coffee-cost" th:text="'Cost: ' + ${coffee.coffeeCost} + ' USD'"></div>
+                                        </div>
+                                        <div class="coffee-image-container">
+                                            <img th:src="${coffee.coffeePhotoUrl}" class="coffee-image" alt="Coffee Image" />
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Thêm Coffee và Category -->
+        <section class="order-section" id="add-coffee">
+            <h2 class="section-title">Add Coffee & Category</h2>
+            <div class="form-container">
+                <!-- Form thêm Category -->
+                <div class="form-section">
+                    <h3>Add Category</h3>
+                    <div class="form-group">
+                        <label for="category-title">Category name:</label>
+                        <input type="text" id="category-title" placeholder="Nhập tên category" />
+                    </div>
+                    <button class="submit-btn" id="add-category-btn">Add Category</button>
+                </div>
+
+                <!-- Form thêm Coffee -->
+                <div class="form-section">
+                    <h3>Add Coffee</h3>
+                    <div class="form-group">
+                        <label for="coffee-title">Coffee name:</label>
+                        <input type="text" id="coffee-title" placeholder="Nhập tên coffee" />
+                    </div>
+                    <div class="form-group">
+                        <label for="coffee-category">Category:</label>
+                        <select id="coffee-category">
+                            <option value="">Choose category</option>
+                            <option th:each="category : ${categories}"
+                                    th:value="${category.categoryId}"
+                                    th:text="${category.categoryTitle}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="coffee-cost">Price (USD):</label>
+                        <input type="number" id="coffee-cost" placeholder="Nhập giá" step="0.01" />
+                    </div>
+                    <div class="form-group">
+                        <label for="coffee-photo">Coffee image (URL):</label>
+                        <input type="text" id="coffee-photo" placeholder="Nhập URL ảnh" />
+                    </div>
+                    <div class="form-group">
+                        <label for="coffee-description">Description:</label>
+                        <textarea id="coffee-description" name="coffee-description" rows="4" cols="50"></textarea>
+                    </div>
+                    <button class="submit-btn" id="add-coffee-btn">Add Coffee</button>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script th:src="@{/js/index.js}"></script>
+</body>
 </html>
 

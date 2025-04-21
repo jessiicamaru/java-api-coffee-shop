@@ -33,4 +33,11 @@ public class CoffeeController {
         //http://localhost:5000/all-coffee?id=0d6d2f67-d26b-11
         return coffeeService.getAllCoffeesByCategory(categoryId);
     }
+
+    @PostMapping("/add-coffee")
+    @ResponseBody
+    public List<CoffeeDto> addCoffee(@RequestParam("id") String categoryId) {
+        //http://localhost:5000/all-coffee?id=0d6d2f67-d26b-11
+        return coffeeService.getAllCoffeesByCategory(categoryId);
+    }
 }

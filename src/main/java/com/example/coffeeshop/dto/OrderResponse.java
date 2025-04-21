@@ -30,6 +30,7 @@ public class OrderResponse {
     public static class UserInfo {
         private String name;
         private String email;
+        private String uid;
     }
 
     @Data

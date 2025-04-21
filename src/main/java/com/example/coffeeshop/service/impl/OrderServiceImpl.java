@@ -84,7 +84,8 @@ public class OrderServiceImpl implements OrderService {
             String userName = (String) row[1];
             String email = (String) row[2];
             String address = (String) row[9];
-            LocalDateTime createdAt = (LocalDateTime) row[16];
+            String uid = (String) row[16];
+            LocalDateTime createdAt = (LocalDateTime) row[17];
             int stat = (int) row[10];
             Double total = (Double) row[11];
             Double fee = (Double) row[12];
@@ -104,7 +105,7 @@ public class OrderServiceImpl implements OrderService {
             if (!orderMap.containsKey(orderId)) {
                 orderMap.put(orderId, new OrderResponse(
                         orderId, // Thêm orderId vào DTO
-                        new OrderResponse.UserInfo(userName, email),
+                        new OrderResponse.UserInfo(userName, email, uid),
                         formattedCreatedAt,
                         address,
                         stat,
@@ -159,7 +160,7 @@ public class OrderServiceImpl implements OrderService {
             if (!orderMap.containsKey(orderId)) {
                 orderMap.put(orderId, new OrderResponse(
                         orderId, // Thêm orderId vào DTO
-                        new OrderResponse.UserInfo(userName, email),
+                        new OrderResponse.UserInfo(userName, email, uid),
                         formattedCreatedAt,
                         address,
                         stat,
@@ -177,5 +178,10 @@ public class OrderServiceImpl implements OrderService {
 
         return new ArrayList<>(orderMap.values());
 
+    }
+
+    @Override
+    public void updateStat(String uid, String orderId, int stat) {
+        orderRepository.updateStat(uid, orderId, stat);
     }
 }

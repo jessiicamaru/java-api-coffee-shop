@@ -38,6 +38,10 @@ public class CoffeeWebSocketHandler extends TextWebSocketHandler {
     }
 
     public static void sendOrderStatus(String uid, String orderId, int status) throws IOException {
+        if (uid == null) {
+            logger.warn("Cannot send order status - UID is null for OrderId: {}, Status: {}", orderId, status);
+            return;
+        }
         WebSocketSession session = userSessions.get(uid);
         if (session != null && session.isOpen()) {
             String message = String.format("{\"orderId\": \"%s\", \"status\": %d}", orderId, status);

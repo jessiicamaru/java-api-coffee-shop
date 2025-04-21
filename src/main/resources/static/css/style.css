@@ -1,96 +1,414 @@
+/* Reset mặc định */
 * {
-    padding: 0;
     margin: 0;
+    padding: 0;
     box-sizing: border-box;
-    font-family: sans-serif;
 }
 
 body {
-    padding: 32px;
-    font-size: 62.5%;
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Layout chính */
+.layout-container {
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
+    min-height: 100vh;
 }
 
-.row {
-    width: 100%;
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #4a2c2a;
+    color: #fff;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
 }
 
-.flex {
-    display: flex;
-}
-
-.w-70 {
-    width: 70%;
-}
-
-.w-30 {
-    width: 30%;
-}
-
-.p-2 {
-    padding: 8px;
-}
-
-.title {
-    font-size: 2.4em;
-    font-weight: bold;
-    margin-bottom: 16px;
+.sidebar-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
     text-align: center;
-    width: 100%;
 }
 
-.container {
-    max-width: 800px;
+.sidebar-menu {
+    list-style: none;
 }
 
-.order-container {
+.sidebar-item {
+    margin-bottom: 10px;
+}
+
+.sidebar-link {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    border-radius: 36px;
-    padding: 16px;
-    border: 1px solid #ccc;
+    padding: 10px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
-.coffee-name {
-    font-size: 16px;
+.sidebar-link:hover {
+    background-color: #5a3a38;
+}
+
+.sidebar-link.active {
+    background-color: #5a3a38;
     font-weight: bold;
-    margin-bottom: 8px;
 }
-.coffee-category {
-    font-size: 16px;
-    margin-bottom: 4px;
+
+.badge {
+    background-color: #f44336;
+    color: #fff;
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 50%;
+    min-width: 20px;
+    text-align: center;
 }
-.size {
-    font-size: 16px;
-    margin-bottom: 4px;
+
+/* Main Content */
+.main-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 20px;
 }
-.quantity {
-    font-size: 16px;
-    margin-bottom: 4px;
+
+/* Tiêu đề chính */
+.title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #4a2c2a;
+    margin-bottom: 30px;
+    text-transform: uppercase;
 }
-.price {
-    font-size: 16px;
-    margin-bottom: 4px;
+
+/* Tiêu đề của từng phần */
+.section-title {
+    font-size: 1.8rem;
+    color: #4a2c2a;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+/* Phần đơn hàng */
+.order-section {
+    margin-bottom: 40px;
+}
+
+.order-section .container {
+    list-style: none;
+}
+
+.order-row {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+    transition: transform 0.2s ease;
+}
+
+.order-row:hover {
+    transform: translateY(-3px);
+}
+
+/* Chi tiết đơn hàng */
+.order-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.label {
+    font-weight: bold;
+    color: #4a2c2a;
+    width: 150px;
+}
+
+.value {
+    flex: 1;
+    color: #555;
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.status.pending {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.status.preparing {
+    background-color: #fff3e0;
+    color: #f57c00;
+}
+
+.status.delivering {
+    background-color: #e3f2fd;
+    color: #1e88e5;
+}
+
+.status.completed {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status.canceled {
+    background-color: #f5f5f5;
+    color: #757575;
+}
+
+/* Tiêu đề "Coffees" */
+.coffee-header {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4a2c2a;
+    margin: 20px 0 10px;
+}
+
+/* Danh sách cà phê */
+.coffee-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .coffee-item {
-    border: 1px solid #ccc;
-    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 15px;
+    border: 1px solid #ddd;
+}
+
+.coffee-details {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+.coffee-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.coffee-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #4a2c2a;
+}
+
+.coffee-category, .coffee-size, .coffee-quantity, .coffee-cost {
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.coffee-image-container {
+    width: 100px;
+    height: 100px;
+}
+
+.coffee-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+/* Nhóm nút bấm */
+.button-group {
+    display: flex;
+    gap: 10px;
 }
 
 button {
     padding: 8px 16px;
     border: none;
-    border-radius: 8px;
-    background-color: #f1f1f1;
+    border-radius: 5px;
+    font-size: 0.95rem;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #e1e1e1;
+.accept-order {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+.accept-order:hover {
+    background-color: #45a049;
+}
+
+.decline-order {
+    background-color: #f44336;
+    color: #fff;
+}
+
+.decline-order:hover {
+    background-color: #d32f2f;
+}
+
+.finish-order {
+    background-color: #2196f3;
+    color: #fff;
+}
+
+.finish-order:hover {
+    background-color: #1976d2;
+}
+
+/* Form thêm Coffee và Category */
+.form-container {
+    display: flex;
+    gap: 30px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form-section {
+    flex: 1;
+}
+
+.form-section h3 {
+    font-size: 1.3rem;
+    color: #4a2c2a;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    color: #4a2c2a;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.95rem;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #4a2c2a;
+}
+
+.submit-btn {
+    background-color: #4a2c2a;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #5a3a38;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .layout-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        position: static;
+        padding: 10px;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .order-row {
+        padding: 15px;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .label {
+        width: auto;
+    }
+
+    .coffee-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .coffee-details {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .coffee-image-container {
+        width: 80px;
+        height: 80px;
+    }
+
+    .button-group {
+        flex-direction: column;
+        gap: 5px;
+        width: 100%;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .form-container {
+        flex-direction: column;
+        gap: 20px;
+    }
 }

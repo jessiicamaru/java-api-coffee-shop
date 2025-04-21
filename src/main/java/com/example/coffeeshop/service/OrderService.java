@@ -9,4 +9,5 @@ public interface OrderService {
     void createOrder(OrderRequest orderRequest);
     List<OrderResponse> getAllOrders();
     List<OrderResponse> getAllOrdersByUid(String uid);
+    void updateStat(String uid, String orderId, int stat);
 }
