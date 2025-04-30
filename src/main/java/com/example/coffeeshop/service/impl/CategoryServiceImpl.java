@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +26,15 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categories = categoryRepository.findAll(Sort.by(Sort.Direction.DESC, "categoryId"));
         return categories.stream().map(this::mapToCategoryDto).collect(Collectors.toList());
     }
+
+    @Override
+    public CategoryDto addCategory(Category category) {
+        String categoryId = UUID.randomUUID().toString();
+        category.setCategoryId(categoryId);
+        categoryRepository.save(category);
+        return mapToCategoryDto(category);
+    }
+
 
     private CategoryDto mapToCategoryDto(Category category) {
         return CategoryDto.builder()

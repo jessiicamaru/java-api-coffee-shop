@@ -160,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ title })
+            body: JSON.stringify({ categoryTitle: title })
         })
         .then(response => {
             if (!response.ok) {
@@ -169,9 +169,10 @@ document.addEventListener("DOMContentLoaded", () => {
             return response.json();
         })
         .then(category => {
+            const categorySelect = document.getElementById("coffee-category");
             const option = document.createElement("option");
-            option.value = category.id;
-            option.textContent = category.title;
+            option.value = category.categoryId;
+            option.textContent = category.categoryTitle;
             categorySelect.appendChild(option);
             document.getElementById("category-title").value = "";
             alert("Thêm category thành công!");
@@ -183,16 +184,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.getElementById("add-coffee-btn").addEventListener("click", () => {
-        const title = document.getElementById("coffee-title").value.trim();
+        const coffeeTitle = document.getElementById("coffee-title").value.trim();
         const categoryId = document.getElementById("coffee-category").value;
-        const cost = parseFloat(document.getElementById("coffee-cost").value);
-        const photoUrl = document.getElementById("coffee-photo").value.trim();
-        const description = document.getElementById("coffee-description").value.trim();
+        const coffeeCost = parseFloat(document.getElementById("coffee-cost").value);
+        const coffeePhotoUrl = document.getElementById("coffee-photo").value.trim();
+        const coffeeDescription = document.getElementById("coffee-description").value.trim();
 
-        if (!title || !categoryId || !cost || !photoUrl) {
+        if (!coffeeTitle || !categoryId || !coffeeCost || !coffeePhotoUrl) {
             alert("Vui lòng điền đầy đủ thông tin coffee!");
             return;
         }
+
+        console.log({
+                                    coffeeTitle,
+                                    category: {
+                                        categoryId
+                                    },
+                                    coffeeCost,
+                                    coffeePhotoUrl,
+                                    coffeeDescription
+                                });
 
         fetch("/add-coffee", {
             method: "POST",
@@ -200,11 +211,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                title,
-                categoryId,
-                cost,
-                photoUrl,
-                description
+                coffeeTitle,
+                category: {
+                    categoryId
+                },
+                coffeeCost,
+                coffeePhotoUrl,
+                coffeeDescription
             })
         })
         .then(response => {

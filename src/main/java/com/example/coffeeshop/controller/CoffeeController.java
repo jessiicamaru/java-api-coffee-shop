@@ -3,6 +3,8 @@ package com.example.coffeeshop.controller;
 import com.example.coffeeshop.dto.CategoryDto;
 import com.example.coffeeshop.dto.CoffeeDto;
 import com.example.coffeeshop.model.Category;
+import com.example.coffeeshop.model.Coffee;
+import com.example.coffeeshop.model.OrderStatusUpdate;
 import com.example.coffeeshop.service.CategoryService;
 import com.example.coffeeshop.service.CoffeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +38,7 @@ public class CoffeeController {
 
     @PostMapping("/add-coffee")
     @ResponseBody
-    public List<CoffeeDto> addCoffee(@RequestParam("id") String categoryId) {
-        //http://localhost:5000/all-coffee?id=0d6d2f67-d26b-11
-        return coffeeService.getAllCoffeesByCategory(categoryId);
+    public void addCoffee(@RequestBody Coffee coffee) {
+       coffeeService.insertCoffee(coffee);
     }
 }
