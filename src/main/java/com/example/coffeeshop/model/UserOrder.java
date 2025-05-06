@@ -35,8 +35,10 @@ public class UserOrder {
     private Double longitude;
     private Double latitude;
     private String note;
+    private Double originalTotal;
+    private Double originalFee;
 
-    public UserOrder(String orderId, User user, String address, int stat, Double total, Double fee, Double longitude, Double latitude, String note) {
+    public UserOrder(String orderId, User user, String address, int stat, Double total, Double fee, Double originalTotal, Double originalFee, Double longitude, Double latitude, String note) {
         this.orderId = orderId;
         this.user = user;
         this.address = address;
@@ -46,5 +48,7 @@ public class UserOrder {
         this.latitude = latitude;
         this.longitude = longitude;
         this.note = note;
+        this.originalTotal = originalTotal;
+        this.originalFee = originalFee;
     }
 }

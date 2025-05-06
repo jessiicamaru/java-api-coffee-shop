@@ -13,10 +13,13 @@ public class OrderRequest {
     private String address;
     private Double total;
     private Double fee;
+    private Double originalTotal;
+    private Double originalFee;
     private Double longitude;
     private Double latitude;
     private String note;
     private List<CoffeeOrder> coffees;
+    private List<PromotionRequest> promotion;
 
     @Getter
     @Setter
@@ -26,5 +29,14 @@ public class OrderRequest {
         private String coffeeId;
         private String size;
         private int quantity;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class PromotionRequest {
+        private String promotionId;
+        private String promotionCode;
     }
 }

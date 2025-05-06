@@ -5,6 +5,7 @@ import com.example.coffeeshop.dto.PromotionConditionDto;
 import com.example.coffeeshop.dto.PromotionDiscountDto;
 import com.example.coffeeshop.dto.PromotionDto;
 import com.example.coffeeshop.dto.PromotionEligibleUserDto;
+import com.example.coffeeshop.model.FilterPromotionRequest;
 import com.example.coffeeshop.model.Promotion;
 import com.example.coffeeshop.model.PromotionEligibleUser;
 import com.example.coffeeshop.repository.PromotionRepository;
@@ -30,38 +31,78 @@ public class PromotionServiceImpl implements PromotionService {
     @Autowired
     private UserOrderRepository userOrderRepository;
 
-    public List<PromotionDto> getApplicablePromotions(String uid) {
-        if (uid == null || uid.trim().isEmpty()) {
+
+    @Override
+    public List<PromotionDto> findAll() {
+        return promotionRepository.findAll().stream().map(promotion -> mapToPromotionDto(promotion)).collect(Collectors.toList());
+    }
+
+
+    public List<String> filterPromotions(FilterPromotionRequest request) {
+        if (request.getUid() == null || request.getUid().trim().isEmpty()) {
             throw new IllegalArgumentException("UID is required");
         }
 
-        // Lấy số đơn hàng của người dùng
-        int orderCount = userOrderRepository.countOrdersByUser(uid);
-
-        // Lấy tất cả khuyến mãi đang hoạt động
+        int orderCount = userOrderRepository.countOrdersByUser(request.getUid());
         List<Promotion> activePromotions = promotionRepository.findActivePromotions(LocalDateTime.now());
-        List<PromotionDto> applicablePromotions = new ArrayList<>();
+        List<String> invalidPromotionIds = new ArrayList<>();
 
         for (Promotion promotion : activePromotions) {
-            // Kiểm tra giới hạn sử dụng
-            int usageCount = promotionUsageRepository.countUsageByPromotionAndUser(promotion.getPromotionId(), uid);
+            int usageCount = promotionUsageRepository.countUsageByPromotionAndUser(promotion.getPromotionId(), request.getUid());
             if (promotion.getUsageLimitPerUser() > 0 && usageCount >= promotion.getUsageLimitPerUser()) {
-                continue; // Đã vượt quá giới hạn sử dụng
+                invalidPromotionIds.add(promotion.getPromotionId());
+                continue;
             }
 
-            // Kiểm tra tiêu chí người dùng
             boolean isEligible = true;
             for (PromotionEligibleUser criteria : promotion.getEligibleUsers()) {
-                isEligible = checkEligibility(criteria, uid, orderCount);
-                if (!isEligible) break;
+                isEligible = checkEligibility(criteria, request.getUid(), orderCount);
+                if (!isEligible) {
+                    invalidPromotionIds.add(promotion.getPromotionId());
+                    break;
+                }
             }
 
-            if (isEligible) {
-                applicablePromotions.add(mapToPromotionDto(promotion));
+            if (isEligible && !isPromotionConditionsMet(promotion, request)) {
+                invalidPromotionIds.add(promotion.getPromotionId());
             }
         }
 
-        return applicablePromotions;
+        return invalidPromotionIds;
+    }
+
+
+    private boolean isPromotionConditionsMet(Promotion promotion, FilterPromotionRequest request) {
+        return promotion.getConditions().stream().allMatch(condition -> {
+            switch (condition.getConditionType()) {
+                case totalOrderValue: // So sánh với totalAmount
+                    return compareValue(request.getTotalAmount(), condition.getConditionValue(), condition.getOperator());
+                case distance: // So sánh với distance
+                    return compareValue(request.getDistance(), condition.getConditionValue(), condition.getOperator());
+                case productQuantity: // So sánh với itemCount
+                    return compareValue(request.getItemCount().doubleValue(), condition.getConditionValue(), condition.getOperator());
+                case shippingFee:
+                case shippingFeePercentage:
+                    // TODO: Nếu cần xử lý shippingFee hoặc shippingFeePercentage, thêm logic ở đây
+                    return true; // Tạm thời bỏ qua nếu không có dữ liệu tương ứng
+                default:
+                    return true; // Điều kiện không xác định, mặc định hợp lệ
+            }
+        });
+    }
+
+    private boolean compareValue(Double value, Double threshold, Operator operator) {
+        int comparison = Double.compare(value, threshold);
+        switch (operator) {
+            case greaterThan:
+                return comparison > 0;
+            case equal:
+                return comparison == 0;
+            case lessThan:
+                return comparison < 0;
+            default:
+                return false;
+        }
     }
 
     private PromotionDto mapToPromotionDto(Promotion promotion) {

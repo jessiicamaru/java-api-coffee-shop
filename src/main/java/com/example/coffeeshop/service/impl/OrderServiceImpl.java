@@ -2,10 +2,7 @@ package com.example.coffeeshop.service.impl;
 
 import com.example.coffeeshop.dto.OrderRequest;
 import com.example.coffeeshop.dto.OrderResponse;
-import com.example.coffeeshop.model.Coffee;
-import com.example.coffeeshop.model.OrderCoffee;
-import com.example.coffeeshop.model.User;
-import com.example.coffeeshop.model.UserOrder;
+import com.example.coffeeshop.model.*;
 import com.example.coffeeshop.repository.*;
 import com.example.coffeeshop.service.OrderService;
 import com.example.coffeeshop.socket.CoffeeWebSocketHandler;
@@ -34,21 +31,54 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private PromotionRepository promotionRepository;
 
+    @Autowired
+    private PromotionUsageRepository promotionUsageRepository;
+
+    @Autowired
+    private OrderPromotionRepository orderPromotionRepository;
+
+    @Override
     public void createOrder(OrderRequest orderRequest) {
-        String orderId = orderRequest.getOrderId(); // Đã có orderId từ client
-        String uid = orderRequest.getUid(); // Lấy UID từ request
+        // 1. Lấy thông tin từ OrderRequest
+        String orderId = orderRequest.getOrderId();
+        String uid = orderRequest.getUid();
         String address = orderRequest.getAddress();
         Double total = orderRequest.getTotal();
         Double fee = orderRequest.getFee();
+        Double originalTotal = orderRequest.getOriginalTotal();
+        Double originalFee = orderRequest.getOriginalFee();
         Double longitude = orderRequest.getLongitude();
         Double latitude = orderRequest.getLatitude();
         String note = orderRequest.getNote();
         User user = userRepository.findByUid(uid);
 
-        UserOrder userOrder = new UserOrder(orderId, user, address, 0, total, fee, longitude, latitude, note);
-        userOrderRepository.save(userOrder);
+        // 3. Kiểm tra tính hợp lệ của các khuyến mãi
+        List<OrderRequest.PromotionRequest> promotions = orderRequest.getPromotion() != null ? orderRequest.getPromotion() : List.of();
+        for (OrderRequest.PromotionRequest promo : promotions) {
+            String promotionId = promo.getPromotionId();
+            com.example.coffeeshop.model.Promotion promotion = promotionRepository.findById(promotionId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid promotion ID: " + promotionId));
 
+            // Kiểm tra thời gian hoạt động
+            if (LocalDateTime.now().isBefore(promotion.getStartDate()) ||
+                    LocalDateTime.now().isAfter(promotion.getEndDate())) {
+                throw new IllegalArgumentException("Promotion " + promotionId + " is not active");
+            }
+
+            // Kiểm tra giới hạn sử dụng
+            int usageCount = promotionUsageRepository.countUsageByPromotionAndUser(promotionId, uid);
+            if (promotion.getUsageLimitPerUser() > 0 && usageCount >= promotion.getUsageLimitPerUser()) {
+                throw new IllegalArgumentException("Promotion " + promotionId + " usage limit exceeded");
+            }
+        }
+
+        // 4. Tạo và lưu UserOrder
+        UserOrder userOrder = new UserOrder(orderId, user, address, 0, total, fee, originalTotal, originalFee, longitude, latitude, note);
+        userOrderRepository.save(userOrder);
+        // 6. Lưu chi tiết đơn hàng vào order_coffee
         List<OrderCoffee> coffeeOrders = orderRequest.getCoffees().stream().map(coffeeItem -> {
             Coffee coffee = coffeeRepository.findByCoffeeId(coffeeItem.getCoffeeId());
 
@@ -59,8 +89,26 @@ public class OrderServiceImpl implements OrderService {
                     .size(coffeeItem.getSize())
                     .build();
         }).toList();
-
         orderCoffeeRepository.saveAll(coffeeOrders);
+
+        // 5. Lưu thông tin sử dụng khuyến mãi
+        for (OrderRequest.PromotionRequest promo : promotions) {
+            String promotionId = promo.getPromotionId();
+
+            // Lưu vào promotion_usage
+            PromotionUsage usage = new PromotionUsage();
+            usage.setUid(uid);
+            usage.setOrderId(orderId);
+            usage.setPromotionId(promotionId);
+            usage.setUsedAt(LocalDateTime.now());
+            promotionUsageRepository.save(usage);
+
+            // Lưu vào order_promotions
+            OrderPromotion orderPromotion = new OrderPromotion();
+            orderPromotion.setOrderId(orderId);
+            orderPromotion.setPromotionId(promotionId);
+            orderPromotionRepository.save(orderPromotion);
+        }
 
         try {
             CoffeeWebSocketHandler.sendOrderStatus(uid, orderId, 0);
