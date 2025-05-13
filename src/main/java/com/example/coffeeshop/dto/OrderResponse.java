@@ -16,6 +16,8 @@ public class OrderResponse {
     private int stat;
     private Double total;
     private Double fee;
+    private Double originalTotal;
+    private Double originalFee;
     private Double longitude;
     private Double latitude;
     private String note;

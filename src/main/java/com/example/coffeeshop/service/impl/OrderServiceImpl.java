@@ -133,7 +133,9 @@ public class OrderServiceImpl implements OrderService {
             String email = (String) row[2];
             String address = (String) row[9];
             String uid = (String) row[16];
-            LocalDateTime createdAt = (LocalDateTime) row[17];
+            Double originalTotal = (Double) row[17];
+            Double originalFee = (Double) row[18];
+            LocalDateTime createdAt = (LocalDateTime) row[19];
             int stat = (int) row[10];
             Double total = (Double) row[11];
             Double fee = (Double) row[12];
@@ -159,6 +161,8 @@ public class OrderServiceImpl implements OrderService {
                         stat,
                         total,
                         fee,
+                        originalTotal,
+                        originalFee,
                         longitude,
                         latitude,
                         note,
@@ -188,7 +192,9 @@ public class OrderServiceImpl implements OrderService {
             String userName = (String) row[1];
             String email = (String) row[2];
             String address = (String) row[9];
-            LocalDateTime createdAt = (LocalDateTime) row[16];
+            Double originalTotal = (Double) row[16];
+            Double originalFee = (Double) row[17];
+            LocalDateTime createdAt = (LocalDateTime) row[18];
             int stat = (int) row[10];
             Double total = (Double) row[11];
             Double fee = (Double) row[12];
@@ -214,6 +220,8 @@ public class OrderServiceImpl implements OrderService {
                         stat,
                         total,
                         fee,
+                        originalTotal,
+                        originalFee,
                         longitude,
                         latitude,
                         note,
