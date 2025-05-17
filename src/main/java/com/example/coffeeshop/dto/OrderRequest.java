@@ -18,6 +18,7 @@ public class OrderRequest {
     private Double longitude;
     private Double latitude;
     private String note;
+    private String receiveCustomer;
     private List<CoffeeOrder> coffees;
     private List<PromotionRequest> promotion;
 

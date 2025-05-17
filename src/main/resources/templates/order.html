@@ -39,8 +39,8 @@
         <!-- Chưa chấp nhận (stat=0) -->
         <section class="order-section" id="pending">
             <h2 class="section-title">Pending</h2>
-            <ul class="container">
-                <li class="order-row" th:each="item : ${pendingOrders}"
+            <div class="container">
+                <div class="order-row" th:each="item : ${pendingOrders}"
                     th:attr="data-user-id=${item.user != null and item.user.uid != null} ? ${item.user.uid} : '',data-order-id=${item.orderId != null} ? ${item.orderId} : ''">
                     <div class="order-content">
                         <div class="order-details">
@@ -64,7 +64,22 @@
                                 <span class="label">Total:</span>
                                 <span class="value" th:text="${item.total} + ' USD'"></span>
                             </div>
-
+                            <div class="detail-row">
+                                <span class="label">Receiver:</span>
+                                <span class="value" th:text="${item.receiveCustomer}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Total:</span>
+                                <span class="value" th:text="${item.total} + ' USD'"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Fee:</span>
+                                <span class="value" th:text="${item.fee} + ' USD'"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Note:</span>
+                                <span class="value" th:text="${item.note}"></span>
+                            </div>
                             <div class="detail-row">
                                 <span class="label">Status:</span>
                                 <span class="value status pending" th:text="${item.stat}"></span>
@@ -92,15 +107,15 @@
                             </ul>
                         </div>
                     </div>
-                </li>
-            </ul>
+                </div>
+            </div>
         </section>
 
         <!-- Đang chuẩn bị (stat=1) -->
         <section class="order-section" id="preparing">
             <h2 class="section-title">Preparing</h2>
-            <ul class="container">
-                <li class="order-row" th:each="item : ${preparingOrders}"
+            <div class="container">
+                <div class="order-row" th:each="item : ${preparingOrders}"
                     th:attr="data-user-id=${item.user != null and item.user.uid != null} ? ${item.user.uid} : '',data-order-id=${item.orderId != null} ? ${item.orderId} : ''">
                     <div class="order-content">
                         <div class="order-details">
@@ -124,7 +139,22 @@
                                 <span class="label">Total:</span>
                                 <span class="value" th:text="${item.total} + ' USD'"></span>
                             </div>
-
+                            <div class="detail-row">
+                                <span class="label">Receiver:</span>
+                                <span class="value" th:text="${item.receiveCustomer}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Total:</span>
+                                <span class="value" th:text="${item.total} + ' USD'"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Fee:</span>
+                                <span class="value" th:text="${item.fee} + ' USD'"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Note:</span>
+                                <span class="value" th:text="${item.note}"></span>
+                            </div>
                             <div class="detail-row">
                                 <span class="label">Status:</span>
                                 <span class="value status preparing" th:text="${item.stat}"></span>
@@ -152,15 +182,15 @@
                             </ul>
                         </div>
                     </div>
-                </li>
-            </ul>
+                </div>
+            </div>
         </section>
 
         <!-- Đang giao (stat=2) -->
         <section class="order-section" id="delivering">
             <h2 class="section-title">Delivering</h2>
-            <ul class="container">
-                <li class="order-row" th:each="item : ${deliveringOrders}"
+            <div class="container">
+                <div class="order-row" th:each="item : ${deliveringOrders}"
                     th:attr="data-user-id=${item.user != null and item.user.uid != null} ? ${item.user.uid} : '',data-order-id=${item.orderId != null} ? ${item.orderId} : ''">
                     <div class="order-content">
                         <div class="order-details">
@@ -184,7 +214,22 @@
                                 <span class="label">Total:</span>
                                 <span class="value" th:text="${item.total} + ' USD'"></span>
                             </div>
-
+                            <div class="detail-row">
+                                <span class="label">Receiver:</span>
+                                <span class="value" th:text="${item.receiveCustomer}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Total:</span>
+                                <span class="value" th:text="${item.total} + ' USD'"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Fee:</span>
+                                <span class="value" th:text="${item.fee} + ' USD'"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Note:</span>
+                                <span class="value" th:text="${item.note}"></span>
+                            </div>
                             <div class="detail-row">
                                 <span class="label">Status:</span>
                                 <span class="value status delivering" th:text="${item.stat}"></span>
@@ -211,15 +256,15 @@
                             </ul>
                         </div>
                     </div>
-                </li>
-            </ul>
+                </div>
+            </div>
         </section>
 
         <!-- Đã xong (stat=3) -->
         <section class="order-section" id="completed">
             <h2 class="section-title">Completed</h2>
-            <ul class="container">
-                <li class="order-row" th:each="item : ${completedOrders}"
+            <div class="container">
+                <div class="order-row" th:each="item : ${completedOrders}"
                     th:attr="data-user-id=${item.user != null and item.user.uid != null} ? ${item.user.uid} : '',data-order-id=${item.orderId != null} ? ${item.orderId} : ''">
                     <div class="order-content">
                         <div class="order-details">
@@ -243,7 +288,22 @@
                                 <span class="label">Total:</span>
                                 <span class="value" th:text="${item.total} + ' USD'"></span>
                             </div>
-
+                            <div class="detail-row">
+                                <span class="label">Receiver:</span>
+                                <span class="value" th:text="${item.receiveCustomer}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Total:</span>
+                                <span class="value" th:text="${item.total} + ' USD'"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Fee:</span>
+                                <span class="value" th:text="${item.fee} + ' USD'"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Note:</span>
+                                <span class="value" th:text="${item.note}"></span>
+                            </div>
                             <div class="detail-row">
                                 <span class="label">Status:</span>
                                 <span class="value status completed" th:text="${item.stat}"></span>
@@ -267,15 +327,15 @@
                             </ul>
                         </div>
                     </div>
-                </li>
-            </ul>
+                </div>
+            </div>
         </section>
 
         <!-- Đã hủy (stat=4) -->
         <section class="order-section" id="canceled">
             <h2 class="section-title">Cancelled</h2>
-            <ul class="container">
-                <li class="order-row" th:each="item : ${canceledOrders}"
+            <div class="container">
+                <div class="order-row" th:each="item : ${canceledOrders}"
                     th:attr="data-user-id=${item.user != null and item.user.uid != null} ? ${item.user.uid} : '',data-order-id=${item.orderId != null} ? ${item.orderId} : ''">
                     <div class="order-content">
                         <div class="order-details">
@@ -299,7 +359,22 @@
                                 <span class="label">Total:</span>
                                 <span class="value" th:text="${item.total} + ' USD'"></span>
                             </div>
-
+                            <div class="detail-row">
+                                <span class="label">Receiver:</span>
+                                <span class="value" th:text="${item.receiveCustomer}"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Total:</span>
+                                <span class="value" th:text="${item.total} + ' USD'"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Fee:</span>
+                                <span class="value" th:text="${item.fee} + ' USD'"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Note:</span>
+                                <span class="value" th:text="${item.note}"></span>
+                            </div>
                             <div class="detail-row">
                                 <span class="label">Status:</span>
                                 <span class="value status canceled" th:text="${item.stat}"></span>
@@ -323,8 +398,8 @@
                             </ul>
                         </div>
                     </div>
-                </li>
-            </ul>
+                </div>
+            </div>
         </section>
 
         <!-- Thêm Coffee và Category -->

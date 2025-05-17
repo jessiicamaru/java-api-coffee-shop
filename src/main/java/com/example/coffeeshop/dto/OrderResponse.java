@@ -21,6 +21,7 @@ public class OrderResponse {
     private Double longitude;
     private Double latitude;
     private String note;
+    private String receiveCustomer;
     private List<CoffeeOrderInfo> coffees;
 
 

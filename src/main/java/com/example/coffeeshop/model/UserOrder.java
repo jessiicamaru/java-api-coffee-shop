@@ -37,8 +37,9 @@ public class UserOrder {
     private String note;
     private Double originalTotal;
     private Double originalFee;
+    private String receiveCustomer;
 
-    public UserOrder(String orderId, User user, String address, int stat, Double total, Double fee, Double originalTotal, Double originalFee, Double longitude, Double latitude, String note) {
+    public UserOrder(String orderId, User user, String address, int stat, Double total, Double fee, Double originalTotal, Double originalFee, Double longitude, Double latitude, String note, String receiveCustomer) {
         this.orderId = orderId;
         this.user = user;
         this.address = address;
@@ -50,5 +51,6 @@ public class UserOrder {
         this.note = note;
         this.originalTotal = originalTotal;
         this.originalFee = originalFee;
+        this.receiveCustomer = receiveCustomer;
     }
 }

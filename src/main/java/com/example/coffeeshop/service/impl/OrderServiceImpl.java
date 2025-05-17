@@ -53,6 +53,7 @@ public class OrderServiceImpl implements OrderService {
         Double longitude = orderRequest.getLongitude();
         Double latitude = orderRequest.getLatitude();
         String note = orderRequest.getNote();
+        String receiveCustomer = orderRequest.getReceiveCustomer();
         User user = userRepository.findByUid(uid);
 
         // 3. Kiểm tra tính hợp lệ của các khuyến mãi
@@ -76,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         // 4. Tạo và lưu UserOrder
-        UserOrder userOrder = new UserOrder(orderId, user, address, 0, total, fee, originalTotal, originalFee, longitude, latitude, note);
+        UserOrder userOrder = new UserOrder(orderId, user, address, 0, total, fee, originalTotal, originalFee, longitude, latitude, note, receiveCustomer);
         userOrderRepository.save(userOrder);
         // 6. Lưu chi tiết đơn hàng vào order_coffee
         List<OrderCoffee> coffeeOrders = orderRequest.getCoffees().stream().map(coffeeItem -> {
@@ -135,6 +136,68 @@ public class OrderServiceImpl implements OrderService {
             String uid = (String) row[16];
             Double originalTotal = (Double) row[17];
             Double originalFee = (Double) row[18];
+            String receiveCustomer = (String) row[19];
+            LocalDateTime createdAt = (LocalDateTime) row[20];
+            int stat = (int) row[10];
+            Double total = (Double) row[11];
+            Double fee = (Double) row[12];
+            Double longitude = (Double) row[13];
+            Double latitude = (Double) row[14];
+            String note = (String) row[15];
+            String formattedCreatedAt = createdAt.format(formatter);
+            OrderResponse.CoffeeOrderInfo coffee = new OrderResponse.CoffeeOrderInfo(
+                    (String) row[3],  // coffeeTitle
+                    (String) row[4],  // coffeePhotoUrl
+                    (Double) row[5],  // coffeeCost
+                    (String) row[6],  // categoryTitle
+                    ((Number) row[7]).intValue(), // quantity
+                    (String) row[8]   // size
+            );
+
+            if (!orderMap.containsKey(orderId)) {
+                orderMap.put(orderId, new OrderResponse(
+                        orderId, // Thêm orderId vào DTO
+                        new OrderResponse.UserInfo(userName, email, uid),
+                        formattedCreatedAt,
+                        address,
+                        stat,
+                        total,
+                        fee,
+                        originalTotal,
+                        originalFee,
+                        longitude,
+                        latitude,
+                        note,
+                        receiveCustomer,
+                        new ArrayList<>()
+                ));
+            }
+
+            orderMap.get(orderId).getCoffees().add(coffee);
+        }
+
+        return new ArrayList<>(orderMap.values());
+
+    }
+
+    @Override
+    public List<OrderResponse> getAllOrdersByUid(String uid) {
+        List<Object[]> results = orderRepository.findAllOrdersByUid(uid);
+
+        if (results.isEmpty()) {
+            return List.of();
+        }
+
+        Map<String, OrderResponse> orderMap = new LinkedHashMap<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        for (Object[] row : results) {
+            String orderId = (String) row[0];
+            String userName = (String) row[1];
+            String email = (String) row[2];
+            String address = (String) row[9];
+            Double originalTotal = (Double) row[16];
+            Double originalFee = (Double) row[17];
+            String receiveCustomer = (String) row[18];
             LocalDateTime createdAt = (LocalDateTime) row[19];
             int stat = (int) row[10];
             Double total = (Double) row[11];
@@ -166,65 +229,7 @@ public class OrderServiceImpl implements OrderService {
                         longitude,
                         latitude,
                         note,
-                        new ArrayList<>()
-                ));
-            }
-
-            orderMap.get(orderId).getCoffees().add(coffee);
-        }
-
-        return new ArrayList<>(orderMap.values());
-
-    }
-
-    @Override
-    public List<OrderResponse> getAllOrdersByUid(String uid) {
-        List<Object[]> results = orderRepository.findAllOrdersByUid(uid);
-
-        if (results.isEmpty()) {
-            return List.of();
-        }
-
-        Map<String, OrderResponse> orderMap = new LinkedHashMap<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        for (Object[] row : results) {
-            String orderId = (String) row[0];
-            String userName = (String) row[1];
-            String email = (String) row[2];
-            String address = (String) row[9];
-            Double originalTotal = (Double) row[16];
-            Double originalFee = (Double) row[17];
-            LocalDateTime createdAt = (LocalDateTime) row[18];
-            int stat = (int) row[10];
-            Double total = (Double) row[11];
-            Double fee = (Double) row[12];
-            Double longitude = (Double) row[13];
-            Double latitude = (Double) row[14];
-            String note = (String) row[15];
-            String formattedCreatedAt = createdAt.format(formatter);
-            OrderResponse.CoffeeOrderInfo coffee = new OrderResponse.CoffeeOrderInfo(
-                    (String) row[3],  // coffeeTitle
-                    (String) row[4],  // coffeePhotoUrl
-                    (Double) row[5],  // coffeeCost
-                    (String) row[6],  // categoryTitle
-                    ((Number) row[7]).intValue(), // quantity
-                    (String) row[8]   // size
-            );
-
-            if (!orderMap.containsKey(orderId)) {
-                orderMap.put(orderId, new OrderResponse(
-                        orderId, // Thêm orderId vào DTO
-                        new OrderResponse.UserInfo(userName, email, uid),
-                        formattedCreatedAt,
-                        address,
-                        stat,
-                        total,
-                        fee,
-                        originalTotal,
-                        originalFee,
-                        longitude,
-                        latitude,
-                        note,
+                        receiveCustomer,
                         new ArrayList<>()
                 ));
             }

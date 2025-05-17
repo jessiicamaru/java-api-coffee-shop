@@ -15,7 +15,7 @@ public interface OrderRepository extends JpaRepository<UserOrder, String> {
                  o.orderId, u.displayName, u.email,
                  c.coffeeTitle, c.coffeePhotoUrl, c.coffeeCost,
                  cat.categoryTitle, oc.quantity, oc.size, o.address,\s
-                 o.stat, o.total, o.fee, o.longitude, o.latitude, o.note, o.user.uid, o.originalTotal, o.originalFee,
+                 o.stat, o.total, o.fee, o.longitude, o.latitude, o.note, o.user.uid, o.originalTotal, o.originalFee, o.receiveCustomer,
                  o.createdAt\s
              FROM UserOrder o
              JOIN o.user u
@@ -31,7 +31,7 @@ public interface OrderRepository extends JpaRepository<UserOrder, String> {
                  o.orderId, u.displayName, u.email,
                  c.coffeeTitle, c.coffeePhotoUrl, c.coffeeCost,
                  cat.categoryTitle, oc.quantity, oc.size, o.address,\s
-                 o.stat, o.total, o.fee, o.longitude, o.latitude, o.note, o.originalTotal, o.originalFee,
+                 o.stat, o.total, o.fee, o.longitude, o.latitude, o.note, o.originalTotal, o.originalFee, o.receiveCustomer,
                  o.createdAt\s
              FROM UserOrder o
              JOIN o.user u
